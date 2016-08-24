@@ -13,14 +13,14 @@ namespace WebApplication1.Controllers
         {
             ViewBag.Title = "Home Page";
 
-            var db = new PricesEntitiesModel.PricesContext("DefaultConnection");
+            //var db = new PricesEntitiesModel.PricesContext("DefaultConnection");
 
-            var chain = new Chain();
+            //var chain = new Chain();
 
-            chain.Name = "abc";
-            db.Chains.Add(chain);
-            //db.Chains.Add(new Chain());
-            //db.SaveChanges();
+            //chain.Name = "abc";
+            //db.Chains.Add(chain);
+            ////db.Chains.Add(new Chain());
+            ////db.SaveChanges();
             return View();
         }
     }

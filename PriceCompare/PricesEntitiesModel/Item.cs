@@ -26,7 +26,7 @@ namespace PricesEntitiesModel
 
         public string Name { get; set; }
 
-        public string SManufacturerName { get; set; }
+        public string ManufacturerName { get; set; }
 
         public string ManufacturerItemDescription { get; set; }
 
