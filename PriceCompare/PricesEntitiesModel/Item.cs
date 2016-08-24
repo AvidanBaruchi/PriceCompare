@@ -18,7 +18,7 @@ namespace PricesEntitiesModel
         [Key]
         public int ItemId { get; set; }
 
-        public Chain Chain { get; set; }
+        //public Chain Chain { get; set; }
 
         public string ItemCode { get; set; }
 
@@ -36,6 +36,6 @@ namespace PricesEntitiesModel
 
         public string QuantityInPackage { get; set; }
 
-        public Price Price { get; set; }
+        public virtual ICollection<Price> Prices { get; set; }
     }
 }

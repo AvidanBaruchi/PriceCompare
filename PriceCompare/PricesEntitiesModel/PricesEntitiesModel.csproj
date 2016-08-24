@@ -41,6 +41,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +53,11 @@
   <ItemGroup>
     <Compile Include="Chain.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Migrations\201608241601201_init.cs" />
+    <Compile Include="Migrations\201608241601201_init.Designer.cs">
+      <DependentUpon>201608241601201_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Price.cs" />
     <Compile Include="PricesContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +66,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201608241601201_init.resx">
+      <DependentUpon>201608241601201_init.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

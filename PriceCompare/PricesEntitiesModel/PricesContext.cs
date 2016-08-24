@@ -10,7 +10,7 @@ namespace PricesEntitiesModel
 {
     public class PricesContext : DbContext
     {
-        public PricesContext() : this("PricesContext")
+        public PricesContext() : this("PricesCompare")
         {
               
         }
