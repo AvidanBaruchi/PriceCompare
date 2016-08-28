@@ -9,6 +9,12 @@ namespace PricesEntitiesModel
 {
     public class Chain
     {
+        public Chain(string id, string name)
+        {
+            ChainId = id;
+            Name = name;
+        }
+
         [Key]
         public string ChainId { get; set; }
 

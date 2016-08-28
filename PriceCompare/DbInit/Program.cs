@@ -10,7 +10,12 @@ namespace DbInit
     {
         static void Main(string[] args)
         {
-            var db = new PricesEntitiesModel.PricesContext();
+            DbInitiator initiator = new DbInitiator(@"C:\Users\CodeValue\Desktop\prices data");
+
+
+            //initiator.initChains();
+            initiator.InitStores();
+            //initiator.InitItems();
         }
     }
 }
