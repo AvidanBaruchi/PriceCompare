@@ -21,7 +21,7 @@ namespace PricesEntitiesModel
 
         public Chain Chain { get; set; }
 
-        public Chain SubChainId { get; set; }
+        public Chain SubChain { get; set; }
 
         public string ReportedChainId { get; set; }
 
