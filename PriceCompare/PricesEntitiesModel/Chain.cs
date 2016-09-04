@@ -9,6 +9,11 @@ namespace PricesEntitiesModel
 {
     public class Chain
     {
+        public Chain()
+        {
+            
+        }
+
         public Chain(string id, string name)
         {
             ChainId = id;

@@ -14,15 +14,34 @@ namespace DbInit
 {
     class DbInitiator
     {
-        private DbContext db = null;
         private string _dataPath = null;
 
         public DbInitiator()
         {
-            
+            //ClearDb();
         }
 
-        public DbInitiator(string dataPath)
+        private void ClearDb()
+        {
+            using (var context = new PricesContext())
+            {
+                context.Chains.RemoveRange(context.Chains);
+                context.Stores.RemoveRange(context.Stores);
+                context.Items.RemoveRange(context.Items);
+                context.Prices.RemoveRange(context.Prices);
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to clea db" + e.Message);
+                }
+            }
+        }
+
+        public DbInitiator(string dataPath) : this()
         {
             _dataPath = dataPath;
         }
@@ -64,35 +83,51 @@ namespace DbInit
             CheckPath();
 
             DirectoryInfo dir = new DirectoryInfo(_dataPath);
+            //var xElement = XElement.Load(xmlFile.Open());
 
-            foreach (var directory in dir.EnumerateDirectories())
+            var stores = dir.EnumerateFiles("*Stores*", SearchOption.AllDirectories)
+                //.Select(file => XElement.Load(file.Name))
+                .ToList();
+
+            Parallel.ForEach(stores, (storeFile) =>
             {
-                var stores = directory.GetFiles("*Stores*");
+                var element = XElement.Load(storeFile.FullName);
 
-                if (stores.Length != 1)
-                {
-                    return;
-                }
+                var isUpperCased = element.Descendants("CHAINID").ToArray().Any();
 
-                var storeFile = stores[0];
-                
-                if (storeFile.Extension == "zip")
-                {
-                    try
+                if (isUpperCased) return;
+
+                var chainId = element.Descendants("ChainId").ToArray()[0].Value;
+
+                IEnumerable<Store> storesList =
+                element.Descendants("Store")
+                    .Select((store) =>
                     {
-                        using (var archive = new ZipArchive(storeFile.OpenRead()))
-                        {
-                            var xmlFile = archive.Entries[0];
+                        Store storeEntity = new Store();
 
-                            var xElement = XElement.Load(xmlFile.Open());
-                        }
-                    }
-                    catch (Exception)
+                        storeEntity.Name = store.Descendants("StoreName").First().Value;
+                        storeEntity.Address = store.Descendants("Address").First().Value;
+                        storeEntity.City = store.Descendants("City").First().Value;
+
+                        var storeType = int.Parse(store.Descendants("StoreType").First().Value);
+                        storeEntity.StoreType = (StoreType) storeType;
+
+                        return storeEntity;
+                    });
+
+                using (var db = new PricesContext())
+                {
+                    var x = db.Chains.ToList();
+                    var chain = db.Chains.First(c => c.ChainId == chainId);
+
+                    foreach (var store in storesList)
                     {
-                     
+                        store.Chain = chain;
+                        chain.Stores.Add(store);
                     }
+                    //chain.Stores.Add(storesList);
                 }
-            }
+            });
         }
 
         public void InitItems()
