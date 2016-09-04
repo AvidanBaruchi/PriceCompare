@@ -24,5 +24,12 @@ namespace PricesEntitiesModel
         public DbSet<Store> Stores { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Price> Prices { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<Store>().HasKey(k => new {k.StoreId, k.Chain.ChainId});
+        }
     }
 }

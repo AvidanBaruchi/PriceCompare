@@ -17,12 +17,10 @@ namespace PricesEntitiesModel
 
     public class Store
     {
-        [Column(Order = 1), Key]
+        [Key, Column(Order = 1)]
         public string StoreId { get; set; }
-        [Column(Order = 2), Key]
-        public Chain Chain { get; set; }
-
-        public Chain SubChain { get; set; }
+        [Key, Column(Order = 2), ForeignKey("Chain")]
+        public string ChainId { get; set; }
 
         public string Name { get; set; }
 
@@ -33,5 +31,7 @@ namespace PricesEntitiesModel
         public StoreType StoreType { get; set; }
 
         public virtual ICollection<Item> Items { get; set; }
+
+        public virtual Chain Chain { get; set; }
     }
 }
