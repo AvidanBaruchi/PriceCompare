@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,10 @@ namespace PricesEntitiesModel
     {
         [Key]
         public int PriceId { get; set; }
-
-        public Item Item { get; set; }
-
-        public Store Store { get; set; }
+        //[ForeignKey("Item")]
+        //public int ItemId { get; set; }
+        //[ForeignKey("Store")]
+        //public string StoreId { get; set; }
 
         public double PriceValue { get; set; }
 
@@ -23,5 +24,9 @@ namespace PricesEntitiesModel
         public string UnitOfMeasure { get; set; }
 
         public string Quantity { get; set; }
+
+        public virtual Item Item { get; set; }
+
+        public virtual Store Store { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace PricesEntitiesModel
 {
     public enum StoreType
     {
-        Phisical = 1,
+        Physical = 1,
         Online = 2,
         Both = 3
     }

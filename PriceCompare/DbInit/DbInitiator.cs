@@ -89,31 +89,33 @@ namespace DbInit
                 //.Select(file => XElement.Load(file.Name))
                 .ToList();
 
-            Parallel.ForEach(stores, (storeFile) =>
+            foreach (var storeXmlPath in stores)
             {
-                var element = XElement.Load(storeFile.FullName);
+                var element = XElement.Load(storeXmlPath.FullName);
 
-                var isUpperCased = element.Descendants("CHAINID").ToArray().Any();
+                NormalizeXml(element);
 
-                if (isUpperCased) return;
+                var chainId = element.Descendants("chainid").ToArray()[0].Value;
 
-                var chainId = element.Descendants("ChainId").ToArray()[0].Value;
+                List<Store> storesList =
+                element
+                .Descendants("store")
+                .Select((store) =>
+                {
+                    Store storeEntity = new Store();
 
-                IEnumerable<Store> storesList =
-                element.Descendants("Store")
-                    .Select((store) =>
-                    {
-                        Store storeEntity = new Store();
+                    storeEntity.StoreId = store.Descendants("storeid").First().Value;
+                    storeEntity.Name = store.Descendants("storename").First().Value;
+                    storeEntity.Address = store.Descendants("address").First().Value;
+                    storeEntity.City = store.Descendants("city").First().Value;
 
-                        storeEntity.Name = store.Descendants("StoreName").First().Value;
-                        storeEntity.Address = store.Descendants("Address").First().Value;
-                        storeEntity.City = store.Descendants("City").First().Value;
+                    var storeType = int.Parse(store.Descendants("storetype").First().Value);
+                    storeEntity.StoreType = (StoreType)storeType;
+                    storeEntity.ChainId = chainId;
 
-                        var storeType = int.Parse(store.Descendants("StoreType").First().Value);
-                        storeEntity.StoreType = (StoreType) storeType;
-
-                        return storeEntity;
-                    });
+                    return storeEntity;
+                })
+                .ToList();
 
                 using (var db = new PricesContext())
                 {
@@ -125,9 +127,66 @@ namespace DbInit
                         store.Chain = chain;
                         chain.Stores.Add(store);
                     }
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Cant Save stores {e.Message}");
+                    }
                     //chain.Stores.Add(storesList);
                 }
-            });
+            }
+
+            //Parallel.ForEach(stores, (storeFile) =>
+            //{
+            //    var element = XElement.Load(storeFile.FullName);
+
+            //    var isUpperCased = element.Descendants("CHAINID").ToArray().Any();
+
+            //    if (isUpperCased) return;
+
+            //    var chainId = element.Descendants("ChainId").ToArray()[0].Value;
+
+            //    IEnumerable<Store> storesList =
+            //    element.Descendants("Store")
+            //        .Select((store) =>
+            //        {
+            //            Store storeEntity = new Store();
+
+            //            storeEntity.Name = store.Descendants("StoreName").First().Value;
+            //            storeEntity.Address = store.Descendants("Address").First().Value;
+            //            storeEntity.City = store.Descendants("City").First().Value;
+
+            //            var storeType = int.Parse(store.Descendants("StoreType").First().Value);
+            //            storeEntity.StoreType = (StoreType) storeType;
+
+            //            return storeEntity;
+            //        });
+
+            //    using (var db = new PricesContext())
+            //    {
+            //        var x = db.Chains.ToList();
+            //        var chain = db.Chains.First(c => c.ChainId == chainId);
+
+            //        foreach (var store in storesList)
+            //        {
+            //            store.Chain = chain;
+            //            chain.Stores.Add(store);
+            //        }
+            //        //chain.Stores.Add(storesList);
+            //    }
+            //});
+        }
+
+        private void NormalizeXml(XElement element)
+        {
+            foreach (var node in element.DescendantsAndSelf())
+            {
+                node.Name = node.Name.ToString().ToLower();
+            }
         }
 
         public void InitItems()

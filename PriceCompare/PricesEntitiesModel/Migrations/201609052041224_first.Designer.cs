@@ -13,7 +13,7 @@ namespace PricesEntitiesModel.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201609041752146_first"; }
+            get { return "201609052041224_first"; }
         }
         
         string IMigrationMetadata.Source

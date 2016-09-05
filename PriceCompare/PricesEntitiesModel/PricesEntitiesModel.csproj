@@ -53,13 +53,9 @@
   <ItemGroup>
     <Compile Include="Chain.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="Migrations\201609041752146_first.cs" />
-    <Compile Include="Migrations\201609041752146_first.Designer.cs">
-      <DependentUpon>201609041752146_first.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609041802307_first2.cs" />
-    <Compile Include="Migrations\201609041802307_first2.Designer.cs">
-      <DependentUpon>201609041802307_first2.cs</DependentUpon>
+    <Compile Include="Migrations\201609052041224_first.cs" />
+    <Compile Include="Migrations\201609052041224_first.Designer.cs">
+      <DependentUpon>201609052041224_first.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Price.cs" />
@@ -72,11 +68,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609041752146_first.resx">
-      <DependentUpon>201609041752146_first.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609041802307_first2.resx">
-      <DependentUpon>201609041802307_first2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609052041224_first.resx">
+      <DependentUpon>201609052041224_first.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

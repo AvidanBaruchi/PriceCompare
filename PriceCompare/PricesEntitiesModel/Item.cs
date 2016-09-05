@@ -18,8 +18,6 @@ namespace PricesEntitiesModel
         [Key]
         public int ItemId { get; set; }
 
-        //public Chain Chain { get; set; }
-
         public string ItemCode { get; set; }
 
         public ItemType ItemType { get; set; }

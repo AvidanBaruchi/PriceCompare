@@ -16,6 +16,8 @@ namespace DbInit
             //initiator.initChains();
             initiator.InitStores();
             //initiator.InitItems();
+
+            Console.ReadLine();
         }
     }
 }

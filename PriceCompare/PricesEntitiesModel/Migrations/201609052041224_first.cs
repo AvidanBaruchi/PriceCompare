@@ -21,15 +21,15 @@ namespace PricesEntitiesModel.Migrations
                 c => new
                     {
                         StoreId = c.String(nullable: false, maxLength: 128),
+                        ChainId = c.String(nullable: false, maxLength: 128),
                         Name = c.String(),
                         Address = c.String(),
                         City = c.String(),
                         StoreType = c.Int(nullable: false),
-                        Chain_ChainId = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.StoreId)
-                .ForeignKey("dbo.Chains", t => t.Chain_ChainId)
-                .Index(t => t.Chain_ChainId);
+                .PrimaryKey(t => new { t.StoreId, t.ChainId })
+                .ForeignKey("dbo.Chains", t => t.ChainId, cascadeDelete: true)
+                .Index(t => t.ChainId);
             
             CreateTable(
                 "dbo.Items",
@@ -45,10 +45,11 @@ namespace PricesEntitiesModel.Migrations
                         IsWeighted = c.Boolean(nullable: false),
                         QuantityInPackage = c.String(),
                         Store_StoreId = c.String(maxLength: 128),
+                        Store_ChainId = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.ItemId)
-                .ForeignKey("dbo.Stores", t => t.Store_StoreId)
-                .Index(t => t.Store_StoreId);
+                .ForeignKey("dbo.Stores", t => new { t.Store_StoreId, t.Store_ChainId })
+                .Index(t => new { t.Store_StoreId, t.Store_ChainId });
             
             CreateTable(
                 "dbo.Prices",
@@ -61,25 +62,26 @@ namespace PricesEntitiesModel.Migrations
                         Quantity = c.String(),
                         Item_ItemId = c.Int(),
                         Store_StoreId = c.String(maxLength: 128),
+                        Store_ChainId = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.PriceId)
                 .ForeignKey("dbo.Items", t => t.Item_ItemId)
-                .ForeignKey("dbo.Stores", t => t.Store_StoreId)
+                .ForeignKey("dbo.Stores", t => new { t.Store_StoreId, t.Store_ChainId })
                 .Index(t => t.Item_ItemId)
-                .Index(t => t.Store_StoreId);
+                .Index(t => new { t.Store_StoreId, t.Store_ChainId });
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Items", "Store_StoreId", "dbo.Stores");
-            DropForeignKey("dbo.Prices", "Store_StoreId", "dbo.Stores");
+            DropForeignKey("dbo.Items", new[] { "Store_StoreId", "Store_ChainId" }, "dbo.Stores");
+            DropForeignKey("dbo.Prices", new[] { "Store_StoreId", "Store_ChainId" }, "dbo.Stores");
             DropForeignKey("dbo.Prices", "Item_ItemId", "dbo.Items");
-            DropForeignKey("dbo.Stores", "Chain_ChainId", "dbo.Chains");
-            DropIndex("dbo.Prices", new[] { "Store_StoreId" });
+            DropForeignKey("dbo.Stores", "ChainId", "dbo.Chains");
+            DropIndex("dbo.Prices", new[] { "Store_StoreId", "Store_ChainId" });
             DropIndex("dbo.Prices", new[] { "Item_ItemId" });
-            DropIndex("dbo.Items", new[] { "Store_StoreId" });
-            DropIndex("dbo.Stores", new[] { "Chain_ChainId" });
+            DropIndex("dbo.Items", new[] { "Store_StoreId", "Store_ChainId" });
+            DropIndex("dbo.Stores", new[] { "ChainId" });
             DropTable("dbo.Prices");
             DropTable("dbo.Items");
             DropTable("dbo.Stores");
