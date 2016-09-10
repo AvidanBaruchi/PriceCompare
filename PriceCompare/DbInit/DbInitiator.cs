@@ -101,7 +101,7 @@ namespace DbInit
                 {
                     Store storeEntity = new Store();
 
-                    storeEntity.StoreId = store.Descendants("storeid").First().Value;
+                    storeEntity.StoreId = int.Parse(store.Descendants("storeid").First().Value);
                     storeEntity.Name = store.Descendants("storename").First().Value;
                     storeEntity.Address = store.Descendants("address").First().Value;
                     storeEntity.City = store.Descendants("city").First().Value;
@@ -142,8 +142,7 @@ namespace DbInit
 
             DirectoryInfo dir = new DirectoryInfo(_dataPath);
 
-            var priceFullPaths = dir.EnumerateFiles("*PriceFull*", SearchOption.AllDirectories)
-                .ToList();
+            var priceFullPaths = dir.EnumerateFiles("*PriceFull*", SearchOption.AllDirectories);
 
             foreach (var priceFullPath in priceFullPaths)
             {
@@ -151,7 +150,7 @@ namespace DbInit
 
                 NormalizeXml(element);
                 var chainId = element.Descendants("chainid").First().Value;
-                var storeId = element.Descendants("storeid").First().Value;
+                var storeId = int.Parse(element.Descendants("storeid").First().Value);
 
                 List<Price> prices = element
                 .Descendants("item")
@@ -170,7 +169,15 @@ namespace DbInit
 
                 using (var db = new PricesContext())
                 {
-                    var storeEntity = db.Stores.First(s => s.ChainId == chainId && s.StoreId == storeId);
+                    var storeEntity = db.Stores.Find(storeId, chainId);
+
+                    if (storeEntity == null)
+                    {
+                        Console.WriteLine(
+                        $"Did not find store (chainID = {chainId}, storeId = {storeId})");
+                        db.Dispose();
+                        continue;
+                    }
 
                     foreach (var price in prices)
                     {
@@ -184,11 +191,40 @@ namespace DbInit
                     try
                     {
                         db.SaveChanges();
+                        Console.WriteLine($" Price is done: {priceFullPath.FullName}");
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Cant Save Prices {e.Message}");
+                        Console.WriteLine($"Cant Save Prices of {priceFullPath}: {e.StackTrace}");
                     }
+                }
+            }
+        }
+
+        public void TestDb()
+        {
+            using (var db = new PricesContext())
+            {
+                var storesWithBamba =
+                    db.Prices.Where(p => p.ItemCode == "7290000068770")
+                        .Include(p => p.Store)
+                        .ToList();
+                        //.Select(p => p.Store)
+                        //.ToList();
+
+                //foreach (var price in storesWithBamba[0].Prices.Take(5))
+                //{
+                //    Console.WriteLine(price.PriceValue);
+                //}
+
+                var pricesOfBamba = db.Prices.Where(p => p.ItemCode == "7290000068787")
+                    .Include(p => p.Store)
+                    .ToList();
+
+                foreach (var price in pricesOfBamba)
+                {
+                    Console.WriteLine($@"Store: {price.Store.Name} {price.Store.City}
+    Price: {price.PriceValue}");
                 }
             }
         }

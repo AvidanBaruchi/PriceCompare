@@ -18,7 +18,7 @@ namespace PricesEntitiesModel
     public class Store
     {
         [Key, Column(Order = 1)]
-        public string StoreId { get; set; }
+        public int StoreId { get; set; }
         [Key, Column(Order = 2), ForeignKey("Chain")]
         public string ChainId { get; set; }
 

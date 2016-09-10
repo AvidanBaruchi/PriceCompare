@@ -15,7 +15,9 @@ namespace DbInit
             //initiator.ClearDb();
             //initiator.initChains();
             //initiator.InitStores();
-            initiator.InitPrices();
+            //initiator.InitPrices();
+
+            initiator.TestDb();
 
             Console.ReadLine();
         }

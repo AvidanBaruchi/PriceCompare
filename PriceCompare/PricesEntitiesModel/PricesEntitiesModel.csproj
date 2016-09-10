@@ -77,6 +77,10 @@
     <Compile Include="Migrations\201609101541216_replaced item in price with itemcode foreign key.Designer.cs">
       <DependentUpon>201609101541216_replaced item in price with itemcode foreign key.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609101924013_storeID replaced to integer.cs" />
+    <Compile Include="Migrations\201609101924013_storeID replaced to integer.Designer.cs">
+      <DependentUpon>201609101924013_storeID replaced to integer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Price.cs" />
     <Compile Include="PricesContext.cs" />
@@ -105,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609101541216_replaced item in price with itemcode foreign key.resx">
       <DependentUpon>201609101541216_replaced item in price with itemcode foreign key.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609101924013_storeID replaced to integer.resx">
+      <DependentUpon>201609101924013_storeID replaced to integer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
