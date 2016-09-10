@@ -12,10 +12,10 @@ namespace DbInit
         {
             DbInitiator initiator = new DbInitiator(@"C:\Users\CodeValue\Desktop\prices data");
 
-
+            //initiator.ClearDb();
             //initiator.initChains();
-            initiator.InitStores();
-            //initiator.InitItems();
+            //initiator.InitStores();
+            initiator.InitPrices();
 
             Console.ReadLine();
         }

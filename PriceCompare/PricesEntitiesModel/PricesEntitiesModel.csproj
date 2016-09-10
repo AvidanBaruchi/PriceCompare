@@ -57,6 +57,26 @@
     <Compile Include="Migrations\201609052041224_first.Designer.cs">
       <DependentUpon>201609052041224_first.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609100747304_itemcode is key.cs" />
+    <Compile Include="Migrations\201609100747304_itemcode is key.Designer.cs">
+      <DependentUpon>201609100747304_itemcode is key.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609101057299_removed quantities and weight props.cs" />
+    <Compile Include="Migrations\201609101057299_removed quantities and weight props.Designer.cs">
+      <DependentUpon>201609101057299_removed quantities and weight props.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609101059200_removed itemType from Item.cs" />
+    <Compile Include="Migrations\201609101059200_removed itemType from Item.Designer.cs">
+      <DependentUpon>201609101059200_removed itemType from Item.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609101324473_replaced item with prices in store entity.cs" />
+    <Compile Include="Migrations\201609101324473_replaced item with prices in store entity.Designer.cs">
+      <DependentUpon>201609101324473_replaced item with prices in store entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609101541216_replaced item in price with itemcode foreign key.cs" />
+    <Compile Include="Migrations\201609101541216_replaced item in price with itemcode foreign key.Designer.cs">
+      <DependentUpon>201609101541216_replaced item in price with itemcode foreign key.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Price.cs" />
     <Compile Include="PricesContext.cs" />
@@ -70,6 +90,21 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201609052041224_first.resx">
       <DependentUpon>201609052041224_first.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609100747304_itemcode is key.resx">
+      <DependentUpon>201609100747304_itemcode is key.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609101057299_removed quantities and weight props.resx">
+      <DependentUpon>201609101057299_removed quantities and weight props.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609101059200_removed itemType from Item.resx">
+      <DependentUpon>201609101059200_removed itemType from Item.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609101324473_replaced item with prices in store entity.resx">
+      <DependentUpon>201609101324473_replaced item with prices in store entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609101541216_replaced item in price with itemcode foreign key.resx">
+      <DependentUpon>201609101541216_replaced item in price with itemcode foreign key.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,17 +19,16 @@ namespace DbInit
 
         public DbInitiator()
         {
-            //ClearDb();
         }
 
-        private void ClearDb()
+        public void ClearDb()
         {
             using (var context = new PricesContext())
             {
-                context.Chains.RemoveRange(context.Chains);
-                context.Stores.RemoveRange(context.Stores);
-                context.Items.RemoveRange(context.Items);
                 context.Prices.RemoveRange(context.Prices);
+                context.Items.RemoveRange(context.Items);
+                context.Stores.RemoveRange(context.Stores);
+                context.Chains.RemoveRange(context.Chains);
 
                 try
                 {
@@ -83,10 +83,8 @@ namespace DbInit
             CheckPath();
 
             DirectoryInfo dir = new DirectoryInfo(_dataPath);
-            //var xElement = XElement.Load(xmlFile.Open());
 
             var stores = dir.EnumerateFiles("*Stores*", SearchOption.AllDirectories)
-                //.Select(file => XElement.Load(file.Name))
                 .ToList();
 
             foreach (var storeXmlPath in stores)
@@ -97,8 +95,7 @@ namespace DbInit
 
                 var chainId = element.Descendants("chainid").ToArray()[0].Value;
 
-                List<Store> storesList =
-                element
+                List<Store> storesList = element
                 .Descendants("store")
                 .Select((store) =>
                 {
@@ -119,7 +116,6 @@ namespace DbInit
 
                 using (var db = new PricesContext())
                 {
-                    var x = db.Chains.ToList();
                     var chain = db.Chains.First(c => c.ChainId == chainId);
 
                     foreach (var store in storesList)
@@ -136,49 +132,78 @@ namespace DbInit
                     {
                         Console.WriteLine($"Cant Save stores {e.Message}");
                     }
-                    //chain.Stores.Add(storesList);
                 }
             }
+        }
 
-            //Parallel.ForEach(stores, (storeFile) =>
-            //{
-            //    var element = XElement.Load(storeFile.FullName);
+        public void InitPrices()
+        {
+            CheckPath();
 
-            //    var isUpperCased = element.Descendants("CHAINID").ToArray().Any();
+            DirectoryInfo dir = new DirectoryInfo(_dataPath);
 
-            //    if (isUpperCased) return;
+            var priceFullPaths = dir.EnumerateFiles("*PriceFull*", SearchOption.AllDirectories)
+                .ToList();
 
-            //    var chainId = element.Descendants("ChainId").ToArray()[0].Value;
+            foreach (var priceFullPath in priceFullPaths)
+            {
+                var element = XElement.Load(priceFullPath.FullName);
 
-            //    IEnumerable<Store> storesList =
-            //    element.Descendants("Store")
-            //        .Select((store) =>
-            //        {
-            //            Store storeEntity = new Store();
+                NormalizeXml(element);
+                var chainId = element.Descendants("chainid").First().Value;
+                var storeId = element.Descendants("storeid").First().Value;
 
-            //            storeEntity.Name = store.Descendants("StoreName").First().Value;
-            //            storeEntity.Address = store.Descendants("Address").First().Value;
-            //            storeEntity.City = store.Descendants("City").First().Value;
+                List<Price> prices = element
+                .Descendants("item")
+                .Where(el => el.Descendants("itemcode").First().Value.Length == 13)
+                .Select((item) =>
+                {
+                    var price = new Price();
+                    var itemEntity = CreateItem(item);
 
-            //            var storeType = int.Parse(store.Descendants("StoreType").First().Value);
-            //            storeEntity.StoreType = (StoreType) storeType;
+                    price.Item = itemEntity;
+                    price.PriceValue = double.Parse(item.Descendants("itemprice").First().Value);
 
-            //            return storeEntity;
-            //        });
+                    return price;
+                })
+                .ToList();
 
-            //    using (var db = new PricesContext())
-            //    {
-            //        var x = db.Chains.ToList();
-            //        var chain = db.Chains.First(c => c.ChainId == chainId);
+                using (var db = new PricesContext())
+                {
+                    var storeEntity = db.Stores.First(s => s.ChainId == chainId && s.StoreId == storeId);
 
-            //        foreach (var store in storesList)
-            //        {
-            //            store.Chain = chain;
-            //            chain.Stores.Add(store);
-            //        }
-            //        //chain.Stores.Add(storesList);
-            //    }
-            //});
+                    foreach (var price in prices)
+                    {
+                        price.Item = AddOrUpdateItem(db, price.Item);
+                        price.ItemCode = price.Item.ItemCode;
+                        price.Store = storeEntity;
+                    }
+                    
+                    db.Prices.AddRange(prices);
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Cant Save Prices {e.Message}");
+                    }
+                }
+            }
+        }
+
+        private Item CreateItem(XElement itemElement)
+        {
+            var item = new Item();
+            var itemCode = itemElement.Descendants("itemcode").First().Value;
+
+            item.ItemCode = itemCode;
+            item.ManufacturerItemDescription = itemElement.Descendants("manufactureritemdescription").First().Value;
+            item.ManufacturerName = itemElement.Descendants("manufacturername").First().Value;
+            item.Name = itemElement.Descendants("itemname").First().Value;
+
+            return item;
         }
 
         private void NormalizeXml(XElement element)
@@ -189,9 +214,24 @@ namespace DbInit
             }
         }
 
-        public void InitItems()
+        private Item AddOrUpdateItem(PricesContext db, Item item)
         {
-            CheckPath();
+            var found = db.Items.Find(item.ItemCode);
+
+            if (found == null)
+            {
+                db.Items.Add(item);
+
+                return item;
+            }
+            else
+            {
+                found.Name = item.Name;
+                found.ManufacturerItemDescription = item.ManufacturerItemDescription;
+                found.ManufacturerName = item.ManufacturerName;
+
+                return found;
+            }
         }
 
         private void CheckPath()

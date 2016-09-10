@@ -30,7 +30,7 @@ namespace PricesEntitiesModel
 
         public StoreType StoreType { get; set; }
 
-        public virtual ICollection<Item> Items { get; set; }
+        public virtual ICollection<Price> Prices { get; set; }
 
         public virtual Chain Chain { get; set; }
     }
