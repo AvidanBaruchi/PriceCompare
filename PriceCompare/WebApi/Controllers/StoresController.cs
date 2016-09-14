@@ -17,9 +17,26 @@ namespace WebApi.Controllers
         private PricesContext db = new PricesContext();
 
         // GET: api/Stores
-        public IQueryable<Store> GetStores()
+        public IList<Store> GetStores()
         {
-            return db.Stores;
+            return db.Stores
+                .Include(s => s.Chain)
+                .ToList()
+                .Select((s) =>
+                    new Store()
+                    {
+                        Address = s.Address,
+                        ChainId = s.ChainId,
+                        City = s.City,
+                        Name = s.Name,
+                        StoreId = s.StoreId,
+                        StoreType = s.StoreType,
+                        Chain = new Chain()
+                        {
+                            ChainId = s.Chain.ChainId,
+                            Name = s.Chain.Name
+                        }
+                    }).ToList();
         }
 
         // GET: api/Stores/5

@@ -1,10 +1,11 @@
 ﻿
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    @*<link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">*@
+    
     <title></title>
     <script src="~/Scripts/jquery-3.1.0.min.js"></script>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
 
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/angular.min.js"></script>
@@ -12,15 +13,71 @@
     <script src="~/Scripts/angular-animate.min.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
 </head>
-<body ng-app="PricesApp">
-<div class="container">
+<body ng-app="PricesApp" style="min-height: 2000px; padding-top: 70px;">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">השוואת מחיר עם</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">בית</a></li>
+                    <li><a href="#about">בחר מוצרים</a></li>
+                    <li><a href="#contact">חנויות</a></li>
+                    <li><a href="#contact">סיכום והשוואה</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                @*<ul class="nav navbar-nav navbar-right">
+                    <li><a href="../navbar/">Default</a></li>
+                    <li><a href="../navbar-static-top/">Static top</a></li>
+                    <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                </ul>*@
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+    <div class="container">
+        <!-- Main component for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <h1>השוואת מחיר עם</h1>
+            <p>אבידן ברוכי</p>
+            <p>
+                <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">התחל</a>
+            </p>
+        </div>
+        <ui-view></ui-view>
+    </div> <!-- /container -->
+
+
+
+
+@*<div class="container">
     <div class="jumbotron">
         Prices Compare
     </div>
     <ui-view></ui-view>
-</div>
-    <script src="~/App/app.js"></script>
-    <script src="~/App/controllers/mainCtrl.js"></script>
+</div>*@
+<script src="~/App/app.js"></script>
+<script src="~/App/controllers/mainCtrl.js"></script>
+<script src="~/App/services/prices-service.js"></script>
+
 </body>
 </html>
 @*<div class="jumbotron">

@@ -1,10 +1,14 @@
-﻿(function (angualar) {
+﻿(function (angular) {
+    "use-strict";
+
     var app = angular.module("PricesApp",
     [
         "ngAnimate",
         "ui.router",
         "ui.bootstrap"
     ]);
+
+    app.constant('baseUrl', 'http://localhost:49399');
 
     app.config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider.state('main',
